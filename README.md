@@ -17,7 +17,9 @@ This repo contains the result of following [this tutorial](https://www.edureka.c
 6. Create a virtual environment using the command `python -m venv venv` OR if you are on a Mac, you'll probably need to type `python3 -m venv venv`
 7. Activate your virtual environment with: `source ./venv/Scripts/activate` (on Windows) OR `source ./venv/bin/activate` (on a Mac)
 8. Install all of the same packages that I installed in my version of the project:
+
   ```shell
   pip install -r requirements.txt
   ```
+
 9. Now you should have the latest code as well as all the necessary packages installed locally in your virtual environment and can code right alon side us
