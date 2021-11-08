@@ -4,9 +4,9 @@ tutorial at: https://www.edureka.co/blog/snake-game-with-pygame/
 """
 
 # import required packages
-import pygame
-import time
-import random
+import pygame  # game development framework
+import time  # unused? not sure if we need this or why it's here
+import random  # used to put food in random places on the screen
 
 # initialize the game
 pygame.init()
@@ -20,9 +20,10 @@ dis = pygame.display.set_mode((dis_width, dis_height))
 pygame.display.update()
 
 # set a caption on the screen
-pygame.display.set_caption("Snake game by Edureka")
+pygame.display.set_caption("Snake game by Edureka and ISAT 252")
 
 # variables to hold different colors
+# TODO: remove unused colors
 blue = (0, 0, 255)
 red = (255, 0, 0)
 yellow = (255, 255, 0)
@@ -31,19 +32,23 @@ white = (255, 255, 255)
 
 # Game clock: controls the speed of the game loop
 clock = pygame.time.Clock()
-snake_speed = 30
+snake_speed = 30  # higher number == faster snake == harder game
 
 # setup for messages to be displayed on the screen
 font_style = pygame.font.SysFont(None, 50)
 
 
 def message(msg, color):
+    """Displays a message `msg` in a `color` on the screen, anchored in the middle"""
     mesg = font_style.render(msg, True, color)
+    # TODO: figure out how to center the message on the screen and wrap if it's too long
     dis.blit(mesg, [dis_width / 2, dis_height / 2])
 
 
 def game_loop():
-    # create a variable to keep track of whether or not the game is over
+    """Sets up and controls the main game loop"""
+
+    # create variables to keep track of whether or not the game is over and/or closed
     game_over = False
     game_close = False
 
@@ -52,7 +57,7 @@ def game_loop():
     y1 = dis_height / 2
     x1_change = 0
     y1_change = 0
-    snake_head_size = 10
+    snake_head_size = 20
 
     # get random x/y coordinates for the food
     foodx = (
