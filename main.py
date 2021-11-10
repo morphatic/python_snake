@@ -32,10 +32,24 @@ white = (255, 255, 255)
 
 # Game clock: controls the speed of the game loop
 clock = pygame.time.Clock()
-snake_speed = 30  # higher number == faster snake == harder game
+snake_speed = 10  # higher number == faster snake == harder game
+snake_color = blue
+snake_head_size = 20
 
 # setup for messages to be displayed on the screen
 font_style = pygame.font.SysFont(None, 50)
+
+
+def display_score(score):
+    """Draws the score for the game on the screen"""
+    value = font_style.render("Your Score: " + str(score), True, blue)
+    dis.blit(value, [10, 10])
+
+
+def draw_snake(segment_size, snake_list):
+    """Draws the segments of the snake"""
+    for x in snake_list:
+        pygame.draw.rect(dis, snake_color, [x[0], x[1], segment_size, segment_size])
 
 
 def message(msg, color):
@@ -57,7 +71,8 @@ def game_loop():
     y1 = dis_height / 2
     x1_change = 0
     y1_change = 0
-    snake_head_size = 20
+    snake_list = []
+    snake_length = 1
 
     # get random x/y coordinates for the food
     foodx = (
@@ -65,7 +80,7 @@ def game_loop():
         * snake_head_size
     )
     foody = (
-        round(random.randrange(0, dis_width - snake_head_size) / snake_head_size)
+        round(random.randrange(0, dis_height - snake_head_size) / snake_head_size)
         * snake_head_size
     )
 
@@ -114,16 +129,41 @@ def game_loop():
         # draw a blue rectangle to represent the food
         pygame.draw.rect(dis, green, [foodx, foody, snake_head_size, snake_head_size])
 
-        # draw a blue rectangle to represent the head of the snake
-        # see: https://www.pygame.org/docs/ref/draw.html#pygame.draw.rect
-        pygame.draw.rect(dis, blue, [x1, y1, snake_head_size, snake_head_size])
+        # establish the location of the snake's head
+        snake_head = []
+        snake_head.append(x1)
+        snake_head.append(y1)
+        snake_list.append(snake_head)
+        # makes sure we don't have an "phantom" or "extra" snake segments
+        if len(snake_list) > snake_length:
+            del snake_list[0]
+
+        # check to see if the snake's head intersects with any of the snake body segments
+        for x in snake_list[:-1]:
+            if x == snake_head:
+                game_close = True
+
+        draw_snake(snake_head_size, snake_list)
+        display_score(snake_length - 1)
 
         # updates the surface (display area) with whatever changes
         # have been specified in this iteration through the game loop
         pygame.display.update()
 
         if x1 == foodx and y1 == foody:
-            print("Yummy!!")
+            foodx = (
+                round(
+                    random.randrange(0, dis_width - snake_head_size) / snake_head_size
+                )
+                * snake_head_size
+            )
+            foody = (
+                round(
+                    random.randrange(0, dis_height - snake_head_size) / snake_head_size
+                )
+                * snake_head_size
+            )
+            snake_length += 1
 
         # sets clock speed; higher number == faster game (and more difficult!)
         clock.tick(snake_speed)
