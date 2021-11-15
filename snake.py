@@ -26,7 +26,7 @@ class Snake:
         }
         self.head = [x, y]
 
-    def move(self, direction: str):
+    def turn(self, direction: str):
         """Change the direction of the snake"""
         if direction == "left":
             self.direction.x = -self.head_size
@@ -41,6 +41,14 @@ class Snake:
             self.direction.x = 0
             self.direction.y = self.head_size
 
+    def move(self):
+        """Moves the snake by one increment"""
+        self.x += self.direction.x
+        self.y += self.direction.y
+        self.segments.append(Segment(self.x, self.y, self.head_size, self.head_size))
+        if len(self.segments) > self.length:
+            del self.segments[0]
+
     def grow(self):
         """Increase the length of the snake by 1 segment"""
         self.length += 1
@@ -49,6 +57,14 @@ class Snake:
         """Draws the segments of the snake on the specified display"""
         for segment in self.segments:
             segment.draw(display)
+
+    def has_crashed(self):
+        """Returns True if snake has collided with itself"""
+        head = self.segments[-1]
+        for seg in self.segments[:-1]:
+            if seg.x == head.x and seg.y == head.y:
+                return True
+        return False
 
 
 class Segment:
