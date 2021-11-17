@@ -102,18 +102,16 @@ def game_loop():
                 elif event.key == pygame.K_DOWN:  # down arrow key
                     snake.turn("down")
 
-        # set `game_close` to True if the snake goes outside of the screen boundary
-        if snake.x >= dis_width or snake.x < 0 or snake.y >= dis_height or snake.y < 0:
-            game_close = True
-
         snake.move()
+
+        # set `game_close` to True if the snake goes outside of the screen boundary or intersects itself
+        game_close = snake.is_out_of_bounds(dis) or snake.has_crashed()
+
+        # clear the display; gives us a blank canvas to re-draw the new snake position
         dis.fill(white)
 
         # draw a blue rectangle to represent the food
-        pygame.draw.rect(dis, green, [foodx, foody, snake_head_size, snake_head_size])
-
-        # check to see if the snake's head intersects with any of the snake body segments
-        game_close = snake.has_crashed()
+        pygame.draw.rect(dis, green, [foodx, foody, snake.head_size, snake.head_size])
 
         snake.draw(dis)
         display_score(snake.length - 1)
