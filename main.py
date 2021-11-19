@@ -7,6 +7,7 @@ tutorial at: https://www.edureka.co/blog/snake-game-with-pygame/
 import pygame  # game development framework
 import random  # used to put food in random places on the screen
 from snake import Snake
+from food import Food
 from colors import blue, green, red, white
 
 # initialize the game
@@ -39,12 +40,6 @@ def display_score(score):
     dis.blit(value, [10, 10])
 
 
-# def draw_snake(segment_size, snake_list):
-#     """Draws the segments of the snake"""
-#     for x in snake_list:
-#         pygame.draw.rect(dis, snake_color, [x[0], x[1], segment_size, segment_size])
-
-
 def message(msg, color):
     """Displays a message `msg` in a `color` on the screen, anchored in the middle"""
     mesg = font_style.render(msg, True, color)
@@ -60,17 +55,13 @@ def game_loop():
     game_close = False
 
     # create a snake
-    snake = Snake(blue, dis_width / 2, dis_height / 2)
+    snake = Snake(blue, dis)
 
-    # get random x/y coordinates for the food
-    foodx = (
-        round(random.randrange(0, dis_width - snake.head_size) / snake.head_size)
-        * snake.head_size
-    )
-    foody = (
-        round(random.randrange(0, dis_height - snake.head_size) / snake.head_size)
-        * snake.head_size
-    )
+    # create a piece of food
+    food = Food(green, snake.head_size, dis)
+
+    # arrow keys
+    arrow_keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]
 
     # the main game loop. this loop will run infinitely until the value
     # of `game_over` changes from `False` to `True`
@@ -91,48 +82,30 @@ def game_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
-            # if someone clicks a key on the keyboard
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:  # left arrow key
-                    snake.turn("left")
-                elif event.key == pygame.K_RIGHT:  # right arrow key
-                    snake.turn("right")
-                elif event.key == pygame.K_UP:  # up arrow key
-                    snake.turn("up")
-                elif event.key == pygame.K_DOWN:  # down arrow key
-                    snake.turn("down")
+            # if someone clicks an arrow key
+            if event.type == pygame.KEYDOWN and event.key in arrow_keys:
+                snake.turn(event.key)
 
         snake.move()
 
         # set `game_close` to True if the snake goes outside of the screen boundary or intersects itself
-        game_close = snake.is_out_of_bounds(dis) or snake.has_crashed()
+        game_close = snake.is_out_of_bounds() or snake.has_crashed()
 
         # clear the display; gives us a blank canvas to re-draw the new snake position
         dis.fill(white)
 
-        # draw a blue rectangle to represent the food
-        pygame.draw.rect(dis, green, [foodx, foody, snake.head_size, snake.head_size])
+        # draw the food
+        food.draw()
 
-        snake.draw(dis)
+        snake.draw()
         display_score(snake.length - 1)
 
         # updates the surface (display area) with whatever changes
         # have been specified in this iteration through the game loop
         pygame.display.update()
 
-        if snake.x == foodx and snake.y == foody:
-            foodx = (
-                round(
-                    random.randrange(0, dis_width - snake_head_size) / snake_head_size
-                )
-                * snake_head_size
-            )
-            foody = (
-                round(
-                    random.randrange(0, dis_height - snake_head_size) / snake_head_size
-                )
-                * snake_head_size
-            )
+        if snake.eats(food):
+            food.spawn()
             snake.grow()
 
         # sets clock speed; higher number == faster game (and more difficult!)

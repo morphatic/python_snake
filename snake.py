@@ -2,7 +2,8 @@
 Implements a Snake class to organize all of the properties
 and methods related to the snake in one place
 """
-from pygame import draw
+from pygame import draw, K_LEFT, K_RIGHT, K_UP, K_DOWN
+from food import Food
 
 
 class Snake:
@@ -10,13 +11,13 @@ class Snake:
     Collects all of the properties and methods of a snake
     """
 
-    def __init__(
-        self, color, x: int, y: int, length: int = 1, head_size: int = 10
-    ) -> None:
+    def __init__(self, color, display, length: int = 1, head_size: int = 10) -> None:
         """Defines basic properties of a snake"""
+        w, h = display.get_size()
         self.color = color
-        self.x = x
-        self.y = y
+        self.x = w / 2
+        self.y = h / 2
+        self.display = display
         self.length = 1
         self.head_size = head_size
         self.segments = []  # list of Segments
@@ -24,20 +25,20 @@ class Snake:
             "x": 0,
             "y": 0,
         }
-        self.head = [x, y]
+        self.head = [self.x, self.y]
 
     def turn(self, direction: str):
         """Change the direction of the snake"""
-        if direction == "left":
+        if direction == K_LEFT:
             self.direction["x"] = -self.head_size
             self.direction["y"] = 0
-        elif direction == "right":
+        elif direction == K_RIGHT:
             self.direction["x"] = self.head_size
             self.direction["y"] = 0
-        elif direction == "up":
+        elif direction == K_UP:
             self.direction["x"] = 0
             self.direction["y"] = -self.head_size
-        elif direction == "down":
+        elif direction == K_DOWN:
             self.direction["x"] = 0
             self.direction["y"] = self.head_size
 
@@ -55,10 +56,10 @@ class Snake:
         """Increase the length of the snake by 1 segment"""
         self.length += 1
 
-    def draw(self, display):
+    def draw(self):
         """Draws the segments of the snake on the specified display"""
         for segment in self.segments:
-            segment.draw(display)
+            segment.draw(self.display)
 
     def has_crashed(self):
         """Returns True if snake has collided with itself"""
@@ -68,9 +69,13 @@ class Snake:
                 return True
         return False
 
-    def is_out_of_bounds(self, display):
+    def eats(self, food: Food):
+        """Returns True if the food and snake head are co-located"""
+        return self.x == food.x and self.y == food.y
+
+    def is_out_of_bounds(self):
         """Checks to see if the snake is out of bounds"""
-        w, h = display.get_size()
+        w, h = self.display.get_size()
         return self.x >= w or self.x < 0 or self.y >= h or self.y < 0
 
 
