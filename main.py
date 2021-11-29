@@ -5,7 +5,7 @@ tutorial at: https://www.edureka.co/blog/snake-game-with-pygame/
 
 # import required packages
 import pygame  # game development framework
-import random  # used to put food in random places on the screen
+from background import Background
 from snake import Snake
 from food import Food
 from colors import blue, green, red, white
@@ -14,12 +14,18 @@ from colors import blue, green, red, white
 pygame.init()
 
 # set the screen size
+TILE_SIZE = 16  # one game tile is 16x16 pixels
+TILE_WIDTH = 50  # width of screen is 50 tiles = 800 pixels
+TILE_HEIGHT = 38  # height of screen is 38 tiles = 608 pixels
 dis_width = 800
 dis_height = 600
-dis = pygame.display.set_mode((dis_width, dis_height))
+dis = pygame.display.set_mode((TILE_WIDTH * TILE_SIZE, TILE_HEIGHT * TILE_SIZE))
 
 # draw the screen
 pygame.display.update()
+
+# create the background
+background = Background(TILE_SIZE, TILE_WIDTH, TILE_HEIGHT)
 
 # set a caption on the screen
 pygame.display.set_caption("Snake game by Edureka and ISAT 252")
@@ -32,11 +38,13 @@ snake_head_size = 20
 
 # setup for messages to be displayed on the screen
 font_style = pygame.font.SysFont(None, 50)
+LUCKIEST_GUY_FONT = pygame.font.Font("./assets/fonts/LuckiestGuy-Regular.ttf", 40)
+RANCHERS_FONT = pygame.font.Font("./assets/fonts/Ranchers-Regular.ttf", 40)
 
 
 def display_score(score):
     """Draws the score for the game on the screen"""
-    value = font_style.render("Your Score: " + str(score), True, blue)
+    value = RANCHERS_FONT.render("Your Score: " + str(score), True, blue)
     dis.blit(value, [10, 10])
 
 
@@ -55,7 +63,7 @@ def game_loop():
     game_close = False
 
     # create a snake
-    snake = Snake(blue, dis)
+    snake = Snake(blue, dis, TILE_SIZE)
 
     # create a piece of food
     food = Food(green, snake.head_size, dis)
@@ -88,11 +96,14 @@ def game_loop():
 
         snake.move()
 
+        # draw the background
+        dis.blit(background.surface, (0, 0))
+
         # set `game_close` to True if the snake goes outside of the screen boundary or intersects itself
         game_close = snake.is_out_of_bounds() or snake.has_crashed()
 
         # clear the display; gives us a blank canvas to re-draw the new snake position
-        dis.fill(white)
+        # dis.fill(white)
 
         # draw the food
         food.draw()
@@ -105,7 +116,7 @@ def game_loop():
         pygame.display.update()
 
         if snake.eats(food):
-            food.spawn()
+            food.spawn()  # TODO: make sure food doesn't spawn on top of the snake
             snake.grow()
 
         # sets clock speed; higher number == faster game (and more difficult!)
