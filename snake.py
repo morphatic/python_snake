@@ -66,14 +66,14 @@ class Snake:
         for i, segment in enumerate(self.segments):
             is_turn = (
                 i != len(self.segments) - 1
-                and self.segments[i].orientation != self.segments[i + 1].orientation
+                and self.segments[i].orientation - self.segments[i + 1].orientation != 0
             )
-            is_cw = (
-                is_turn
-                and (self.segments[i].orientation + 90) % 360
-                == self.segments[i + 1].orientation
+            is_ccw = is_turn and (
+                self.segments[i].orientation - self.segments[i + 1].orientation == 90
+                or self.segments[i].orientation - self.segments[i + 1].orientation
+                == -270
             )
-            segment.draw(self.display, i, i == len(self.segments) - 1, is_turn, is_cw)
+            segment.draw(self.display, i, i == len(self.segments) - 1, is_turn, is_ccw)
 
     def has_crashed(self):
         """Returns True if snake has collided with itself"""
@@ -112,17 +112,18 @@ class Segment:
         self.img = self.images[0]
         self.orientation = orientation
 
-    def draw(self, display, pos, is_head, is_turn):
+    def draw(self, display, pos, is_head, is_turn, is_ccw):
         """Draws the segment"""
         if is_head:
-            self.img = self.images[0]
+            self.img = self.images[0]  # head
         elif pos == 0:
-            self.img = self.images[3]
+            self.img = self.images[3]  # tail
         elif is_turn:
-            self.img = self.images[2]
+            self.img = self.images[2]  # turn
         else:
-            self.img = self.images[1]
-        img, rect = self.rotate(self.orientation)
+            self.img = self.images[1]  # body
+        rotation = self.orientation + 90 if is_ccw else self.orientation
+        img, rect = self.rotate(rotation)
         display.blit(img, rect)
         # draw.rect(display, self.color, [self.x, self.y, self.width, self.height])
 
