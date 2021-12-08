@@ -4,7 +4,7 @@ Creates the background for the game screen
 
 from random import randrange
 from pygame import image, Surface
-from main import resource_path
+from utilities import resource_path
 
 
 class Background:

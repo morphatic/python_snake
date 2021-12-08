@@ -6,7 +6,7 @@ and methods related to the snake's food in one place
 from typing import List
 from random import randrange  # used to put food in random places on the screen
 from pygame import draw, image
-from main import resource_path
+from utilities import resource_path
 
 
 class Food:

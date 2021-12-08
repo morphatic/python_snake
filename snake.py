@@ -4,7 +4,7 @@ and methods related to the snake in one place
 """
 from pygame import draw, K_LEFT, K_RIGHT, K_UP, K_DOWN, image, transform
 from food import Food
-from main import resource_path
+from utilities import resource_path
 
 
 class Snake:
