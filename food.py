@@ -6,6 +6,7 @@ and methods related to the snake's food in one place
 from typing import List
 from random import randrange  # used to put food in random places on the screen
 from pygame import draw, image
+from main import resource_path
 
 
 class Food:
@@ -16,14 +17,14 @@ class Food:
     def __init__(self, color: List[int], size: int, display) -> None:
         """Create a new piece of food"""
         self.images = [
-            image.load("./assets/images/food/apple.png"),
-            image.load("./assets/images/food/beer.png"),
-            image.load("./assets/images/food/cheese.png"),
-            image.load("./assets/images/food/chicken.png"),
-            image.load("./assets/images/food/chili.png"),
-            image.load("./assets/images/food/salmon.png"),
-            image.load("./assets/images/food/shrimp.png"),
-            image.load("./assets/images/food/sushi.png"),
+            image.load(resource_path("./assets/images/food/apple.png")),
+            image.load(resource_path("./assets/images/food/beer.png")),
+            image.load(resource_path("./assets/images/food/cheese.png")),
+            image.load(resource_path("./assets/images/food/chicken.png")),
+            image.load(resource_path("./assets/images/food/chili.png")),
+            image.load(resource_path("./assets/images/food/salmon.png")),
+            image.load(resource_path("./assets/images/food/shrimp.png")),
+            image.load(resource_path("./assets/images/food/sushi.png")),
         ]
         self.color = color
         self.size = size

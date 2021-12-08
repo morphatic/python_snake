@@ -4,6 +4,7 @@ Creates the background for the game screen
 
 from random import randrange
 from pygame import image, Surface
+from main import resource_path
 
 
 class Background:
@@ -14,7 +15,7 @@ class Background:
         self.surface = Surface((tile_width * tile_size, tile_height * tile_size))
         for y in range(0, tile_height):
             for x in range(0, tile_width):
-                img_file = (
+                img_file = resource_path(
                     "./assets/images/grass/grass" + str(randrange(0, 10)) + ".png"
                 )
                 img = image.load(img_file)

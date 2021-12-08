@@ -4,6 +4,8 @@ tutorial at: https://www.edureka.co/blog/snake-game-with-pygame/
 """
 
 # import required packages
+from os import path
+from sys import executable
 import pygame  # game development framework
 from background import Background
 from snake import Snake
@@ -12,6 +14,18 @@ from colors import blue, green, red, white
 
 # initialize the game
 pygame.init()
+
+# SOURCE: https://stackoverflow.com/a/13790741/296725
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 # set the screen size
 TILE_SIZE = 16  # one game tile is 16x16 pixels
@@ -38,8 +52,12 @@ snake_head_size = 20
 
 # setup for messages to be displayed on the screen
 font_style = pygame.font.SysFont(None, 50)
-LUCKIEST_GUY_FONT = pygame.font.Font("./assets/fonts/LuckiestGuy-Regular.ttf", 40)
-RANCHERS_FONT = pygame.font.Font("./assets/fonts/Ranchers-Regular.ttf", 40)
+LUCKIEST_GUY_FONT = pygame.font.Font(
+    resource_path("/assets/fonts/LuckiestGuy-Regular.ttf"), 40
+)
+RANCHERS_FONT = pygame.font.Font(
+    resource_path("./assets/fonts/Ranchers-Regular.ttf"), 40
+)
 
 
 def display_score(score):

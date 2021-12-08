@@ -4,6 +4,7 @@ and methods related to the snake in one place
 """
 from pygame import draw, K_LEFT, K_RIGHT, K_UP, K_DOWN, image, transform
 from food import Food
+from main import resource_path
 
 
 class Snake:
@@ -104,10 +105,10 @@ class Segment:
         self.width = width
         self.height = height
         self.images = [
-            image.load("./assets/images/snake/head.png"),
-            image.load("./assets/images/snake/body.png"),
-            image.load("./assets/images/snake/turn.png"),
-            image.load("./assets/images/snake/tail.png"),
+            image.load(resource_path("./assets/images/snake/head.png")),
+            image.load(resource_path("./assets/images/snake/body.png")),
+            image.load(resource_path("./assets/images/snake/turn.png")),
+            image.load(resource_path("./assets/images/snake/tail.png")),
         ]
         self.img = self.images[0]
         self.orientation = orientation
